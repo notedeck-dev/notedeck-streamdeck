@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="utf-8" />
+  <script src="https://sdpi-components.dev/releases/v4/sdpi-components.js"></script>
+</head>
+<body>
+  <title>Open Post Form</title>
+    <sdpi-item label="Text"><sdpi-textarea setting="text" rows="3" placeholder="optional preset"></sdpi-textarea></sdpi-item>
+    <sdpi-item label="CW"><sdpi-textfield setting="cw" placeholder="optional"></sdpi-textfield></sdpi-item>
+    <sdpi-item label="Visibility"><sdpi-select setting="visibility" default="public"><option value="public">Public</option><option value="home">Home</option><option value="followers">Followers</option><option value="specified">Direct</option></sdpi-select></sdpi-item>
+    <sdpi-item><small>Opens NoteDeck's own post form via notedeck://compose. No token needed.</small></sdpi-item>
+</body>
+</html>

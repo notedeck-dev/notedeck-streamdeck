@@ -1,0 +1,84 @@
+{
+  "Name": "NoteDeck",
+  "Version": "0.1.0.0",
+  "Author": "hitalin",
+  "Actions": [
+    {
+      "Name": "Post Note",
+      "UUID": "com.notedeck.streamdeck.post",
+      "Icon": "imgs/actions/post/icon",
+      "Tooltip": "Post a preset note through NoteDeck (confirmed in the NoteDeck window).",
+      "PropertyInspectorPath": "ui/post.html",
+      "Controllers": ["Keypad"],
+      "States": [{ "Image": "imgs/actions/post/key", "TitleAlignment": "bottom" }]
+    },
+    {
+      "Name": "Open Post Form",
+      "UUID": "com.notedeck.streamdeck.compose",
+      "Icon": "imgs/actions/compose/icon",
+      "Tooltip": "Open NoteDeck's post form, optionally with preset text.",
+      "PropertyInspectorPath": "ui/compose.html",
+      "Controllers": ["Keypad"],
+      "States": [{ "Image": "imgs/actions/compose/key", "TitleAlignment": "bottom" }]
+    },
+    {
+      "Name": "Run Capability",
+      "UUID": "com.notedeck.streamdeck.capability",
+      "Icon": "imgs/actions/capability/icon",
+      "Tooltip": "Run any NoteDeck capability with JSON parameters.",
+      "PropertyInspectorPath": "ui/capability.html",
+      "Controllers": ["Keypad"],
+      "States": [{ "Image": "imgs/actions/capability/key", "TitleAlignment": "bottom" }]
+    },
+    {
+      "Name": "Focus Column",
+      "UUID": "com.notedeck.streamdeck.column",
+      "Icon": "imgs/actions/column/icon",
+      "Tooltip": "Focus a deck column in NoteDeck.",
+      "PropertyInspectorPath": "ui/column.html",
+      "Controllers": ["Keypad"],
+      "States": [{ "Image": "imgs/actions/column/key", "TitleAlignment": "bottom" }]
+    },
+    {
+      "Name": "Switch Deck Profile",
+      "UUID": "com.notedeck.streamdeck.profile",
+      "Icon": "imgs/actions/profile/icon",
+      "Tooltip": "Switch NoteDeck's deck profile by name.",
+      "PropertyInspectorPath": "ui/profile.html",
+      "Controllers": ["Keypad"],
+      "States": [{ "Image": "imgs/actions/profile/key", "TitleAlignment": "bottom" }]
+    },
+    {
+      "Name": "Hide NoteDeck",
+      "UUID": "com.notedeck.streamdeck.hide",
+      "Icon": "imgs/actions/hide/icon",
+      "Tooltip": "Hide NoteDeck's window (Boss Key). NoteDeck 1.80+.",
+      "PropertyInspectorPath": "ui/window.html",
+      "Controllers": ["Keypad"],
+      "States": [{ "Image": "imgs/actions/hide/key", "TitleAlignment": "bottom" }]
+    },
+    {
+      "Name": "Show NoteDeck",
+      "UUID": "com.notedeck.streamdeck.show",
+      "Icon": "imgs/actions/show/icon",
+      "Tooltip": "Bring NoteDeck's window to the front. NoteDeck 1.80+.",
+      "PropertyInspectorPath": "ui/window.html",
+      "Controllers": ["Keypad"],
+      "States": [{ "Image": "imgs/actions/show/key", "TitleAlignment": "bottom" }]
+    }
+  ],
+  "Category": "NoteDeck",
+  "CategoryIcon": "imgs/plugin/category-icon",
+  "CodePath": "bin/plugin.js",
+  "Description": "Post, run capabilities and jump around NoteDeck (Misskey client) from Stream Deck keys, through NoteDeck's local HTTP API and notedeck:// links.",
+  "Icon": "imgs/plugin/marketplace",
+  "SDKVersion": 3,
+  "Software": { "MinimumVersion": "7.1" },
+  "OS": [
+    { "Platform": "mac", "MinimumVersion": "12" },
+    { "Platform": "windows", "MinimumVersion": "10" }
+  ],
+  "Nodejs": { "Version": "24", "Debug": "enabled" },
+  "UUID": "com.notedeck.streamdeck",
+  "URL": "https://github.com/notedeck-dev/notedeck-streamdeck"
+}

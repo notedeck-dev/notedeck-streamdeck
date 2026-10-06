@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="utf-8" />
+  <script src="https://sdpi-components.dev/releases/v4/sdpi-components.js"></script>
+</head>
+<body>
+  <title>Post Note</title>
+    <sdpi-item label="NoteDeck API URL"><sdpi-textfield setting="baseUrl" global placeholder="http://127.0.0.1:19820"></sdpi-textfield></sdpi-item>
+    <sdpi-item label="API token"><sdpi-password setting="token" global placeholder="Settings → Permissions → API tokens"></sdpi-password></sdpi-item>
+    <sdpi-item label="Account ID"><sdpi-textfield setting="accountId" placeholder="from account.list (NoteDeck: Run Capability)"></sdpi-textfield></sdpi-item>
+    <sdpi-item label="Text"><sdpi-textarea setting="text" rows="4"></sdpi-textarea></sdpi-item>
+    <sdpi-item label="CW"><sdpi-textfield setting="cw" placeholder="optional"></sdpi-textfield></sdpi-item>
+    <sdpi-item label="Visibility"><sdpi-select setting="visibility" default="public"><option value="public">Public</option><option value="home">Home</option><option value="followers">Followers</option><option value="specified">Direct</option></sdpi-select></sdpi-item>
+    <sdpi-item><small>NoteDeck shows a confirmation before posting. Needs the notes.write permission for external tools.</small></sdpi-item>
+</body>
+</html>
