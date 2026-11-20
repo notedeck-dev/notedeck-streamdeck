@@ -1,5 +1,5 @@
 import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
-import { openDeepLink } from "../api";
+import { openDeepLink, runOnKey } from "../api";
 
 type ComposeSettings = { text?: string; cw?: string; visibility?: string };
 
@@ -8,6 +8,8 @@ type ComposeSettings = { text?: string; cw?: string; visibility?: string };
 export class OpenCompose extends SingletonAction<ComposeSettings> {
   override async onKeyDown(ev: KeyDownEvent<ComposeSettings>): Promise<void> {
     const s = ev.payload.settings;
-    await openDeepLink("compose", { text: s.text, cw: s.cw, visibility: s.visibility || undefined });
+    await runOnKey(ev, "compose", () =>
+      openDeepLink("compose", { text: s.text, cw: s.cw, visibility: s.visibility || undefined }),
+    );
   }
 }

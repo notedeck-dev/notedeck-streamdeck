@@ -1,6 +1,6 @@
 import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 import streamDeck from "@elgato/streamdeck";
-import { describeError, execute } from "../api";
+import { execute, runOnKey } from "../api";
 
 type PostSettings = {
   accountId?: string;
@@ -17,22 +17,17 @@ type PostSettings = {
 export class PostNote extends SingletonAction<PostSettings> {
   override async onKeyDown(ev: KeyDownEvent<PostSettings>): Promise<void> {
     const s = ev.payload.settings;
-    if (!s.text?.trim() || !s.accountId?.trim()) {
-      streamDeck.logger.warn("post: text and accountId are required");
+    if (!s.text?.trim()) {
+      streamDeck.logger.warn("post: text is required");
       await ev.action.showAlert();
       return;
     }
-    try {
-      await execute("notes.create", {
-        accountId: s.accountId.trim(),
-        text: s.text,
-        visibility: s.visibility || "public",
-        ...(s.cw?.trim() ? { cw: s.cw.trim() } : {}),
-      });
-      await ev.action.showOk();
-    } catch (e) {
-      streamDeck.logger.error(`post: ${describeError(e)}`);
-      await ev.action.showAlert();
-    }
+    const params = {
+      ...(s.accountId?.trim() ? { accountId: s.accountId.trim() } : {}),
+      text: s.text,
+      visibility: s.visibility || "public",
+      ...(s.cw?.trim() ? { cw: s.cw.trim() } : {}),
+    };
+    await runOnKey(ev, "post", () => execute("notes.create", params));
   }
 }

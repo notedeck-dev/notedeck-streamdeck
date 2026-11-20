@@ -1,5 +1,5 @@
 import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
-import { openDeepLink } from "../api";
+import { openDeepLink, runOnKey } from "../api";
 
 type ColumnSettings = { columnId?: string };
 
@@ -12,6 +12,6 @@ export class FocusColumn extends SingletonAction<ColumnSettings> {
       await ev.action.showAlert();
       return;
     }
-    await openDeepLink(`column/${encodeURIComponent(id)}`);
+    await runOnKey(ev, "column", () => openDeepLink(`column/${encodeURIComponent(id)}`));
   }
 }

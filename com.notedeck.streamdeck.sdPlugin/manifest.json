@@ -78,7 +78,7 @@
     { "Platform": "mac", "MinimumVersion": "12" },
     { "Platform": "windows", "MinimumVersion": "10" }
   ],
-  "Nodejs": { "Version": "24", "Debug": "enabled" },
+  "Nodejs": { "Version": "24" },
   "UUID": "com.notedeck.streamdeck",
   "URL": "https://github.com/notedeck-dev/notedeck-streamdeck"
 }

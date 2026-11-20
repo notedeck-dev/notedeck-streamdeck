@@ -1,6 +1,6 @@
 import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 import streamDeck from "@elgato/streamdeck";
-import { describeError, execute } from "../api";
+import { execute, runOnKey } from "../api";
 
 type CapabilitySettings = { capabilityId?: string; params?: string };
 
@@ -27,12 +27,6 @@ export class RunCapability extends SingletonAction<CapabilitySettings> {
         return;
       }
     }
-    try {
-      await execute(id, params);
-      await ev.action.showOk();
-    } catch (e) {
-      streamDeck.logger.error(`capability ${id}: ${describeError(e)}`);
-      await ev.action.showAlert();
-    }
+    await runOnKey(ev, `capability ${id}`, () => execute(id, params));
   }
 }

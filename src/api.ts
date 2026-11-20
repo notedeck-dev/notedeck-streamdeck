@@ -32,6 +32,10 @@ export async function globalSettings(): Promise<Required<GlobalSettings>> {
 async function request<T>(method: "GET" | "POST", path: string, body?: unknown): Promise<T> {
   const { baseUrl, token } = await globalSettings();
   if (!token) throw new NoteDeckApiError(0, "no_token", "API token is not set (plugin settings)");
+  // NoteDeck は 127.0.0.1 でしか待ち受けない。他のホストへトークンを送らない
+  if (!/^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/.test(baseUrl)) {
+    throw new NoteDeckApiError(0, "bad_url", `API URL must point to this computer: ${baseUrl}`);
+  }
   let res: Response;
   try {
     res = await fetch(`${baseUrl}${path}`, {
@@ -74,11 +78,38 @@ export async function openDeepLink(path: string, params?: Record<string, string 
   await streamDeck.system.openUrl(`notedeck://${path}${q ? `?${q}` : ""}`);
 }
 
+const inFlight = new Set<string>();
+
+/**
+ * キー 1 回分の処理。成功で ✓、失敗で ⚠ とログ。NoteDeck の確認ダイアログは最長 30 分
+ * 待つので、返事が来るまで同じキーの押し直しは無視する (確認が積まれて二重投稿になる)。
+ */
+export async function runOnKey(
+  ev: { action: { id: string; showOk(): Promise<void>; showAlert(): Promise<void> } },
+  label: string,
+  fn: () => Promise<unknown>,
+): Promise<void> {
+  const key = ev.action.id;
+  if (inFlight.has(key)) return;
+  inFlight.add(key);
+  try {
+    await fn();
+    await ev.action.showOk();
+  } catch (e) {
+    streamDeck.logger.error(`${label}: ${describeError(e)}`);
+    await ev.action.showAlert();
+  } finally {
+    inFlight.delete(key);
+  }
+}
+
 export function describeError(e: unknown): string {
   if (!(e instanceof NoteDeckApiError)) return e instanceof Error ? e.message : String(e);
   switch (e.code) {
     case "no_token":
       return "Set the NoteDeck API token in the key's settings";
+    case "bad_url":
+      return e.message;
     case "unreachable":
       return "NoteDeck is not running";
     case "unauthorized":

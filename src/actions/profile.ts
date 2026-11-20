@@ -1,5 +1,5 @@
 import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
-import { openDeepLink } from "../api";
+import { openDeepLink, runOnKey } from "../api";
 
 type ProfileSettings = { name?: string };
 
@@ -12,6 +12,6 @@ export class SwitchProfile extends SingletonAction<ProfileSettings> {
       await ev.action.showAlert();
       return;
     }
-    await openDeepLink(`profile/${encodeURIComponent(name)}`);
+    await runOnKey(ev, "profile", () => openDeepLink(`profile/${encodeURIComponent(name)}`));
   }
 }
