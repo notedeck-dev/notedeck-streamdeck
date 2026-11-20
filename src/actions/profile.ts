@@ -1,5 +1,6 @@
 import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 import { openDeepLink, runOnKey } from "../api";
+import { NoteDeckApiError } from "../apiLogic";
 
 type ProfileSettings = { name?: string };
 
@@ -8,10 +9,9 @@ type ProfileSettings = { name?: string };
 export class SwitchProfile extends SingletonAction<ProfileSettings> {
   override async onKeyDown(ev: KeyDownEvent<ProfileSettings>): Promise<void> {
     const name = ev.payload.settings.name?.trim();
-    if (!name) {
-      await ev.action.showAlert();
-      return;
-    }
-    await runOnKey(ev, "profile", () => openDeepLink(`profile/${encodeURIComponent(name)}`));
+    await runOnKey(ev, "profile", async () => {
+      if (!name) throw new NoteDeckApiError(0, "missing_setting", "Profile name is not set");
+      await openDeepLink(`profile/${encodeURIComponent(name)}`);
+    });
   }
 }

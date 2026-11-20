@@ -1,6 +1,6 @@
 import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
-import streamDeck from "@elgato/streamdeck";
 import { execute, runOnKey } from "../api";
+import { NoteDeckApiError, parseParams } from "../apiLogic";
 
 type CapabilitySettings = { capabilityId?: string; params?: string };
 
@@ -12,21 +12,9 @@ type CapabilitySettings = { capabilityId?: string; params?: string };
 export class RunCapability extends SingletonAction<CapabilitySettings> {
   override async onKeyDown(ev: KeyDownEvent<CapabilitySettings>): Promise<void> {
     const id = ev.payload.settings.capabilityId?.trim();
-    if (!id) {
-      await ev.action.showAlert();
-      return;
-    }
-    let params: Record<string, unknown> | undefined;
-    const raw = ev.payload.settings.params?.trim();
-    if (raw) {
-      try {
-        params = JSON.parse(raw) as Record<string, unknown>;
-      } catch (e) {
-        streamDeck.logger.error(`capability ${id}: params is not valid JSON: ${String(e)}`);
-        await ev.action.showAlert();
-        return;
-      }
-    }
-    await runOnKey(ev, `capability ${id}`, () => execute(id, params));
+    await runOnKey(ev, `capability ${id}`, async () => {
+      if (!id) throw new NoteDeckApiError(0, "missing_setting", "Capability ID is not set");
+      await execute(id, parseParams(ev.payload.settings.params));
+    });
   }
 }

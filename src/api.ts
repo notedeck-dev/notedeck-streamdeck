@@ -1,4 +1,5 @@
 import streamDeck from "@elgato/streamdeck";
+import { describeError, errorFromBody, errorInfo, isLoopbackUrl, NoteDeckApiError, resultFromBody } from "./apiLogic";
 
 /**
  * NoteDeck の内蔵 HTTP API (既定 127.0.0.1:19820) の薄いクライアント。
@@ -10,17 +11,6 @@ export type GlobalSettings = {
   token?: string;
 };
 
-export class NoteDeckApiError extends Error {
-  constructor(
-    readonly status: number,
-    readonly code: string,
-    message: string,
-  ) {
-    super(message);
-    this.name = "NoteDeckApiError";
-  }
-}
-
 export async function globalSettings(): Promise<Required<GlobalSettings>> {
   const g = await streamDeck.settings.getGlobalSettings<GlobalSettings>();
   return {
@@ -29,11 +19,11 @@ export async function globalSettings(): Promise<Required<GlobalSettings>> {
   };
 }
 
-async function request<T>(method: "GET" | "POST", path: string, body?: unknown): Promise<T> {
+async function request(method: "GET" | "POST", path: string, body?: unknown): Promise<unknown> {
   const { baseUrl, token } = await globalSettings();
   if (!token) throw new NoteDeckApiError(0, "no_token", "API token is not set (plugin settings)");
   // NoteDeck は 127.0.0.1 でしか待ち受けない。他のホストへトークンを送らない
-  if (!/^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/.test(baseUrl)) {
+  if (!isLoopbackUrl(baseUrl)) {
     throw new NoteDeckApiError(0, "bad_url", `API URL must point to this computer: ${baseUrl}`);
   }
   let res: Response;
@@ -49,23 +39,26 @@ async function request<T>(method: "GET" | "POST", path: string, body?: unknown):
   } catch (e) {
     throw new NoteDeckApiError(0, "unreachable", e instanceof Error ? e.message : String(e));
   }
-  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+  const data: unknown = await res.json().catch(() => undefined);
   if (!res.ok) {
-    const code = typeof data.code === "string" ? data.code : res.status === 401 ? "unauthorized" : "http_error";
-    const message = typeof data.error === "string" ? data.error : `${res.status} ${res.statusText}`;
+    const { code, message } = errorFromBody(res.status, data);
     throw new NoteDeckApiError(res.status, code, message);
   }
-  return data as T;
+  return data;
 }
 
 /** `POST /api/capabilities/{id}/execute` → `result` */
-export async function execute<T = unknown>(capabilityId: string, params?: Record<string, unknown>): Promise<T> {
-  const data = await request<{ ok: true; result: T }>(
-    "POST",
-    `/api/capabilities/${encodeURIComponent(capabilityId)}/execute`,
-    params ?? {},
-  );
-  return data.result;
+export async function execute(capabilityId: string, params?: Record<string, unknown>): Promise<unknown> {
+  const data = await request("POST", `/api/capabilities/${encodeURIComponent(capabilityId)}/execute`, params ?? {});
+  return resultFromBody(data);
+}
+
+/** 接続確認。`GET /api/capabilities` はトークンだけで通る (権限は要らない) */
+export async function ping(): Promise<void> {
+  const data = await request("GET", "/api/capabilities");
+  if (!Array.isArray(data)) {
+    throw new NoteDeckApiError(200, "bad_response", "Unexpected response (is the API URL really NoteDeck?)");
+  }
 }
 
 /** `notedeck://` deep link。トークンも権限も要らない (本人がキーを押した扱い) */
@@ -79,6 +72,14 @@ export async function openDeepLink(path: string, params?: Record<string, string 
 }
 
 const inFlight = new Set<string>();
+const lastErrors = new Map<string, unknown>();
+
+/** そのキーの設定画面が開いていれば、最後の失敗理由 (成功後は無し) を送る。キーの表示は ⚠ しか出せない */
+export async function sendStatus(actionId: string): Promise<void> {
+  if (streamDeck.ui.action?.id !== actionId) return;
+  const e = lastErrors.get(actionId);
+  await streamDeck.ui.sendToPropertyInspector({ event: "status", ...(e !== undefined ? { error: errorInfo(e) } : {}) });
+}
 
 /**
  * キー 1 回分の処理。成功で ✓、失敗で ⚠ とログ。NoteDeck の確認ダイアログは最長 30 分
@@ -94,31 +95,14 @@ export async function runOnKey(
   inFlight.add(key);
   try {
     await fn();
+    lastErrors.delete(key);
     await ev.action.showOk();
   } catch (e) {
     streamDeck.logger.error(`${label}: ${describeError(e)}`);
+    lastErrors.set(key, e);
     await ev.action.showAlert();
   } finally {
     inFlight.delete(key);
   }
-}
-
-export function describeError(e: unknown): string {
-  if (!(e instanceof NoteDeckApiError)) return e instanceof Error ? e.message : String(e);
-  switch (e.code) {
-    case "no_token":
-      return "Set the NoteDeck API token in the key's settings";
-    case "bad_url":
-      return e.message;
-    case "unreachable":
-      return "NoteDeck is not running";
-    case "unauthorized":
-      return "Invalid API token";
-    case "permission_denied":
-      return `Not allowed for external tools: ${e.message}`;
-    case "user_cancelled":
-      return "Cancelled in NoteDeck";
-    default:
-      return `${e.code}: ${e.message}`;
-  }
+  await sendStatus(key);
 }

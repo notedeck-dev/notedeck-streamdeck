@@ -1,9 +1,9 @@
+import path from "node:path";
+import url from "node:url";
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
-import path from "node:path";
-import url from "node:url";
 
 const isWatching = !!process.env.ROLLUP_WATCH;
 const sdPlugin = "com.notedeck.streamdeck.sdPlugin";

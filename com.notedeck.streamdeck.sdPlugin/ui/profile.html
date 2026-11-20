@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
+<html lang="en">
+<head>
   <meta charset="utf-8" />
+  <title>Switch Deck Profile</title>
   <script src="sdpi-components.js"></script>
+  <script src="pi.js"></script>
 </head>
 <body>
-  <title>Switch Deck Profile</title>
-    <sdpi-item label="Profile name"><sdpi-textfield setting="name" placeholder="display name or id"></sdpi-textfield></sdpi-item>
-    <sdpi-item><small>Uses notedeck://profile/&lt;name&gt;. No token needed.</small></sdpi-item>
+    <sdpi-item label="__MSG_profileName__"><sdpi-textfield setting="name" placeholder="__MSG_profileNameHint__"></sdpi-textfield></sdpi-item>
+    <sdpi-item label="__MSG_status__"><small id="nd-status"></small></sdpi-item>
+    <sdpi-item><small><sdpi-i18n key="profileNote"></sdpi-i18n></small></sdpi-item>
 </body>
 </html>

@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
+<html lang="en">
+<head>
   <meta charset="utf-8" />
+  <title>Run Capability</title>
   <script src="sdpi-components.js"></script>
+  <script src="pi.js"></script>
 </head>
 <body>
-  <title>Run Capability</title>
-    <sdpi-item label="NoteDeck API URL"><sdpi-textfield setting="baseUrl" global placeholder="http://127.0.0.1:19820"></sdpi-textfield></sdpi-item>
-    <sdpi-item label="API token"><sdpi-password setting="token" global placeholder="Settings → Permissions → API tokens"></sdpi-password></sdpi-item>
-    <sdpi-item label="Capability ID"><sdpi-textfield setting="capabilityId" placeholder="e.g. notes.create, app.hide, column.add"></sdpi-textfield></sdpi-item>
-    <sdpi-item label="Params (JSON)"><sdpi-textarea setting="params" rows="5" placeholder="{ }"></sdpi-textarea></sdpi-item>
-    <sdpi-item><small>Browse ids and parameters at http://127.0.0.1:19820/api/capabilities (with the token) or in NoteDeck's API docs column.</small></sdpi-item>
+    <sdpi-item label="__MSG_apiUrl__"><sdpi-textfield setting="baseUrl" global placeholder="http://127.0.0.1:19820"></sdpi-textfield></sdpi-item>
+    <sdpi-item label="__MSG_token__"><sdpi-password setting="token" global placeholder="__MSG_tokenHint__"></sdpi-password></sdpi-item>
+    <sdpi-item><sdpi-button id="nd-test"><sdpi-i18n key="test"></sdpi-i18n></sdpi-button></sdpi-item>
+    <sdpi-item label="__MSG_status__"><small id="nd-status"></small></sdpi-item>
+    <sdpi-item label="__MSG_capabilityId__"><sdpi-textfield setting="capabilityId" placeholder="__MSG_capabilityIdHint__"></sdpi-textfield></sdpi-item>
+    <sdpi-item label="__MSG_params__"><sdpi-textarea setting="params" rows="5"></sdpi-textarea></sdpi-item>
+    <sdpi-item><small><sdpi-i18n key="capabilityNote"></sdpi-i18n></small></sdpi-item>
 </body>
 </html>

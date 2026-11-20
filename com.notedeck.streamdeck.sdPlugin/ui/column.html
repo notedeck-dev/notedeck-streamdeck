@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
+<html lang="en">
+<head>
   <meta charset="utf-8" />
+  <title>Focus Column</title>
   <script src="sdpi-components.js"></script>
+  <script src="pi.js"></script>
 </head>
 <body>
-  <title>Focus Column</title>
-    <sdpi-item label="Column ID"><sdpi-textfield setting="columnId" placeholder="from GET /api/deck/columns or column.list"></sdpi-textfield></sdpi-item>
-    <sdpi-item><small>Uses notedeck://column/&lt;id&gt;. No token needed.</small></sdpi-item>
+    <sdpi-item label="__MSG_column__"><sdpi-select setting="columnId" datasource="columns" show-refresh placeholder="__MSG_pick__"></sdpi-select></sdpi-item>
+    <sdpi-item label="__MSG_columnId__"><sdpi-textfield setting="columnId"></sdpi-textfield></sdpi-item>
+    <sdpi-item label="__MSG_status__"><small id="nd-status"></small></sdpi-item>
+    <sdpi-item><small><sdpi-i18n key="columnNote"></sdpi-i18n></small></sdpi-item>
+    <sdpi-item label="__MSG_apiUrl__"><sdpi-textfield setting="baseUrl" global placeholder="http://127.0.0.1:19820"></sdpi-textfield></sdpi-item>
+    <sdpi-item label="__MSG_token__"><sdpi-password setting="token" global placeholder="__MSG_tokenHint__"></sdpi-password></sdpi-item>
+    <sdpi-item><sdpi-button id="nd-test"><sdpi-i18n key="test"></sdpi-i18n></sdpi-button></sdpi-item>
 </body>
 </html>

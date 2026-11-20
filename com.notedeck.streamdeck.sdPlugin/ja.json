@@ -1,0 +1,33 @@
+{
+  "Name": "NoteDeck",
+  "Description": "Stream Deck のキーから NoteDeck (Misskey クライアント) に投稿し、capability を実行し、デッキを移動します。NoteDeck のローカル HTTP API と notedeck:// リンクを使います。",
+  "com.notedeck.streamdeck.post": {
+    "Name": "ノートを投稿",
+    "Tooltip": "決めておいた本文を NoteDeck から投稿します (NoteDeck のウィンドウで確認が出ます)。"
+  },
+  "com.notedeck.streamdeck.compose": {
+    "Name": "投稿フォームを開く",
+    "Tooltip": "NoteDeck の投稿フォームを開きます。本文をあらかじめ入れておけます。"
+  },
+  "com.notedeck.streamdeck.capability": {
+    "Name": "Capability を実行",
+    "Tooltip": "NoteDeck の capability を JSON の引数つきで実行します。"
+  },
+  "com.notedeck.streamdeck.column": {
+    "Name": "カラムにフォーカス",
+    "Tooltip": "NoteDeck のデッキのカラムにフォーカスします。"
+  },
+  "com.notedeck.streamdeck.profile": {
+    "Name": "デッキプロファイルを切り替え",
+    "Tooltip": "NoteDeck のデッキプロファイルを名前で切り替えます。"
+  },
+  "com.notedeck.streamdeck.hide": {
+    "Name": "NoteDeck を隠す",
+    "Tooltip": "NoteDeck のウィンドウを隠します (Boss Key)。NoteDeck 1.80 以降。"
+  },
+  "com.notedeck.streamdeck.show": {
+    "Name": "NoteDeck を表示",
+    "Tooltip": "NoteDeck のウィンドウを前に出します。NoteDeck 1.80 以降。"
+  },
+  "Localization": {}
+}

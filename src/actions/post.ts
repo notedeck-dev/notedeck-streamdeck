@@ -1,6 +1,6 @@
 import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
-import streamDeck from "@elgato/streamdeck";
 import { execute, runOnKey } from "../api";
+import { NoteDeckApiError } from "../apiLogic";
 
 type PostSettings = {
   accountId?: string;
@@ -17,17 +17,14 @@ type PostSettings = {
 export class PostNote extends SingletonAction<PostSettings> {
   override async onKeyDown(ev: KeyDownEvent<PostSettings>): Promise<void> {
     const s = ev.payload.settings;
-    if (!s.text?.trim()) {
-      streamDeck.logger.warn("post: text is required");
-      await ev.action.showAlert();
-      return;
-    }
-    const params = {
-      ...(s.accountId?.trim() ? { accountId: s.accountId.trim() } : {}),
-      text: s.text,
-      visibility: s.visibility || "public",
-      ...(s.cw?.trim() ? { cw: s.cw.trim() } : {}),
-    };
-    await runOnKey(ev, "post", () => execute("notes.create", params));
+    await runOnKey(ev, "post", async () => {
+      if (!s.text?.trim()) throw new NoteDeckApiError(0, "missing_setting", "Text is not set");
+      await execute("notes.create", {
+        ...(s.accountId?.trim() ? { accountId: s.accountId.trim() } : {}),
+        text: s.text,
+        visibility: s.visibility || "public",
+        ...(s.cw?.trim() ? { cw: s.cw.trim() } : {}),
+      });
+    });
   }
 }

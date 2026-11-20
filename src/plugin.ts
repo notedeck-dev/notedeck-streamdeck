@@ -6,6 +6,7 @@ import { OpenCompose } from "./actions/compose";
 import { PostNote } from "./actions/post";
 import { SwitchProfile } from "./actions/profile";
 import { HideWindow, ShowWindow } from "./actions/window";
+import { registerPropertyInspector } from "./pi";
 
 // トークンをログに残さないよう info 止まり (trace はメッセージ全文を記録する)
 streamDeck.logger.setLevel("info");
@@ -17,5 +18,6 @@ streamDeck.actions.registerAction(new FocusColumn());
 streamDeck.actions.registerAction(new SwitchProfile());
 streamDeck.actions.registerAction(new HideWindow());
 streamDeck.actions.registerAction(new ShowWindow());
+registerPropertyInspector();
 
 streamDeck.connect();

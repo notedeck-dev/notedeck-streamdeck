@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
+<html lang="en">
+<head>
   <meta charset="utf-8" />
+  <title>Open Post Form</title>
   <script src="sdpi-components.js"></script>
+  <script src="pi.js"></script>
 </head>
 <body>
-  <title>Open Post Form</title>
-    <sdpi-item label="Text"><sdpi-textarea setting="text" rows="3" placeholder="optional preset"></sdpi-textarea></sdpi-item>
-    <sdpi-item label="CW"><sdpi-textfield setting="cw" placeholder="optional"></sdpi-textfield></sdpi-item>
-    <sdpi-item label="Visibility"><sdpi-select setting="visibility" default="public"><option value="public">Public</option><option value="home">Home</option><option value="followers">Followers</option><option value="specified">Direct</option></sdpi-select></sdpi-item>
-    <sdpi-item><small>Opens NoteDeck's own post form via notedeck://compose. No token needed.</small></sdpi-item>
+    <sdpi-item label="__MSG_text__"><sdpi-textarea setting="text" rows="3"></sdpi-textarea></sdpi-item>
+    <sdpi-item label="__MSG_cw__"><sdpi-textfield setting="cw" placeholder="__MSG_optional__"></sdpi-textfield></sdpi-item>
+    <sdpi-item label="__MSG_visibility__"><sdpi-select setting="visibility"><option value="">__MSG_visDefault__</option><option value="public">__MSG_visPublic__</option><option value="home">__MSG_visHome__</option><option value="followers">__MSG_visFollowers__</option><option value="specified">__MSG_visDirect__</option></sdpi-select></sdpi-item>
+    <sdpi-item label="__MSG_status__"><small id="nd-status"></small></sdpi-item>
+    <sdpi-item><small><sdpi-i18n key="composeNote"></sdpi-i18n></small></sdpi-item>
 </body>
 </html>

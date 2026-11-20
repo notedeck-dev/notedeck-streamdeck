@@ -9,20 +9,25 @@
     "build": "rollup -c",
     "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.notedeck.streamdeck\"",
     "typecheck": "tsc --noEmit",
+    "lint": "biome check",
+    "lint:fix": "biome check --write",
+    "test": "vitest run",
     "validate": "streamdeck validate com.notedeck.streamdeck.sdPlugin",
     "pack": "streamdeck pack com.notedeck.streamdeck.sdPlugin"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.6.0",
     "@elgato/cli": "^1.10.1",
     "@rollup/plugin-commonjs": "^29.0.2",
     "@rollup/plugin-node-resolve": "^15.2.2",
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.1.0",
-    "@tsconfig/node20": "^20.1.2",
+    "@tsconfig/node24": "^24.0.6",
     "@types/node": "~24.1.0",
     "rollup": "^4.0.2",
     "tslib": "^2.6.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^3.2.0"
   },
   "dependencies": {
     "@elgato/streamdeck": "^3.0.1"
